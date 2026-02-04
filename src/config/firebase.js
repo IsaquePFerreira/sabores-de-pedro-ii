@@ -9,7 +9,7 @@ const firebaseConfig = {
   projectId: "SEU_PROJECT_ID",
   storageBucket: "SEU_STORAGE_BUCKET",
   messagingSenderId: "SEU_SENDER_ID",
-  appId: "SEU_APP_ID"
+  appId: "SEU_APP_ID",
 };
 
 const app = initializeApp(firebaseConfig);
@@ -17,3 +17,4 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
+
