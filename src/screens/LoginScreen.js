@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { View, Text, TextInput, Button, Alert } from "react-native";
+import { View, Text, TextInput, Button, Alert, StyleSheet } from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firebase";
 import { AuthContext } from "../contexts/AuthContext";
@@ -27,12 +27,13 @@ export default function LoginScreen({ navigation }) {
   }
 
   return (
-    <View style={{ padding: 20 }}>
+    <View style={styles.container}>
       <Text>Email</Text>
       <TextInput
         value={email}
         onChangeText={setEmail}
         autoCapitalize="none"
+        style={styles.input}
       />
 
       <Text>Senha</Text>
@@ -40,13 +41,30 @@ export default function LoginScreen({ navigation }) {
         value={senha}
         onChangeText={setSenha}
         secureTextEntry
+        style={styles.input}
       />
 
       <Button title="Entrar" onPress={handleLogin} />
       <Button
         title="Criar conta"
-        onPress={() => navigation.navigate("Register")}
+        onPress={() => navigation.navigate("Register")} style={{backgroundColor: "green"}}
       />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: { flex: 1,
+    gap: 5,
+    padding: 20,
+   },
+  input: {
+    borderWidth: 1, 
+    borderColor: "#ccc",
+    borderRadius: 6,
+    padding: 10,    
+    marginBottom: 12,
+    fontSize: 16
+  },
+
+});

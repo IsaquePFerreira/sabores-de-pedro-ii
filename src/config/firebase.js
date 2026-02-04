@@ -4,12 +4,12 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "SUA_API_KEY",
-  authDomain: "SEU_AUTH_DOMAIN",
-  projectId: "SEU_PROJECT_ID",
-  storageBucket: "SEU_STORAGE_BUCKET",
-  messagingSenderId: "SEU_SENDER_ID",
-  appId: "SEU_APP_ID",
+  apiKey: "AIzaSyAvOZaY8F8OVd-5j18dSDnoKx5UvTNfeds",
+  authDomain: "sabores-de-pedro-ii-53207.firebaseapp.com",
+  projectId: "sabores-de-pedro-ii-53207",
+  storageBucket: "sabores-de-pedro-ii-53207.firebasestorage.app",
+  messagingSenderId: "492574160063",
+  appId: "1:492574160063:web:921c2fc04940a5124c820a"
 };
 
 const app = initializeApp(firebaseConfig);

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Text, TextInput, Button, Alert } from "react-native";
+import { View, Text, TextInput, Button, Alert, StyleSheet } from "react-native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firebase";
 
@@ -27,12 +27,23 @@ export default function RegisterScreen({ navigation }) {
   return (
     <View style={{ padding: 20 }}>
       <Text>Email</Text>
-      <TextInput value={email} onChangeText={setEmail} />
+      <TextInput value={email} onChangeText={setEmail} style={styles.input} />
 
       <Text>Senha</Text>
-      <TextInput value={senha} onChangeText={setSenha} secureTextEntry />
+      <TextInput value={senha} onChangeText={setSenha} secureTextEntry style={styles.input} />
 
       <Button title="Cadastrar" onPress={handleRegister} />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 6,
+    padding: 10,
+    marginBottom: 12,
+    fontSize: 16
+  }
+});
