@@ -1,15 +1,17 @@
-import { View, Text, ScrollView, Image, StyleSheet } from "react-native";
+import { View, Text, ScrollView, Image, StyleSheet, Button } from "react-native";
+import { useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext";
 
-export default function RecipeScreen({ route }) {
+export default function RecipeScreen({ route, navigation }) {
   const { receita } = route.params;
+  const { user } = useContext(AuthContext);
+
+  const isAutor = user && user.uid === receita.autorId;
 
   return (
     <ScrollView style={styles.container}>
       {receita.imagemUrl && (
-        <Image
-          source={{ uri: receita.imagemUrl }}
-          style={styles.image}
-        />
+        <Image source={{ uri: receita.imagemUrl }} style={styles.image} />
       )}
 
       <Text style={styles.title}>{receita.titulo}</Text>
@@ -18,7 +20,11 @@ export default function RecipeScreen({ route }) {
       <Text style={styles.text}>{receita.descricao}</Text>
 
       <Text style={styles.sectionTitle}>Ingredientes</Text>
-      <Text style={styles.text}>{receita.ingredientes}</Text>
+      {receita.ingredientes.map((item, index) => (
+        <Text key={index} style={styles.text}>
+          • {item}
+        </Text>
+      ))}
 
       <Text style={styles.sectionTitle}>Modo de Preparo</Text>
       <Text style={styles.text}>{receita.modoPreparo}</Text>
@@ -30,20 +36,38 @@ export default function RecipeScreen({ route }) {
         </>
       )}
 
+      {receita.porcoes && (
+        <>
+          <Text style={styles.sectionTitle}>Rendimento</Text>
+          <Text style={styles.text}>
+            {receita.porcoes} porções
+          </Text>
+        </>
+      )}
+
       {receita.origemCultural && (
         <>
           <Text style={styles.sectionTitle}>Origem Cultural</Text>
           <Text style={styles.text}>{receita.origemCultural}</Text>
         </>
       )}
+
+      {isAutor && (
+        <View style={{ marginTop: 20 }}>
+          <Button
+            title="Editar Receita"
+            onPress={() =>
+              navigation.navigate("RecipeManager", { receita })
+            }
+          />
+        </View>
+      )}
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 16
-  },
+  container: { padding: 16 },
   image: {
     width: "100%",
     height: 220,

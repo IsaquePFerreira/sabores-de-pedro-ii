@@ -1,15 +1,27 @@
 import { useState } from "react";
-import { View, Text, TextInput, Button } from "react-native";
+import { View, Text, TextInput, Button, Alert } from "react-native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firebase";
 
-export default function RegisterScreen() {
+export default function RegisterScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
-  function handleRegister() {
-    createUserWithEmailAndPassword(auth, email, senha)
-      .catch(error => alert(error.message));
+  async function handleRegister() {
+    if (!email || !senha) {
+      Alert.alert("Erro", "Preencha email e senha");
+      return;
+    }
+
+    try {
+      await createUserWithEmailAndPassword(auth, email, senha);
+
+      // 🔑 mesmo fluxo do login
+      navigation.replace("RecipeManager");
+
+    } catch (error) {
+      Alert.alert("Erro", error.message);
+    }
   }
 
   return (
