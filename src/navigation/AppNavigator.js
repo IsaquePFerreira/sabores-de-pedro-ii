@@ -27,7 +27,7 @@ export default function AppNavigator() {
           headerRight: () => (
             <Image
               source={require("../assets/Bandeira_de_Pedro_II.jpg")}
-              style={{ width: 52, height: 42, marginRight: 195, borderRadius: 8 }}
+              style={{ width: 52, height: 42, marginRight: 20, borderRadius: 8 }}
             />
           )
         }}

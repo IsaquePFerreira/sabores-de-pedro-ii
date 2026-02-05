@@ -47,16 +47,16 @@ export default function HomeScreen() {
 
         <View style={styles.headerButtons}>
          {user && (
-  <TouchableOpacity
-    style={styles.logoutButton}
-    onPress={async () => {
-      await logout();
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "Home" }],
-      });
-    }}
-  >
+      <TouchableOpacity
+        style={styles.logoutButton}
+        onPress={async () => {
+          await logout();
+          navigation.reset({
+            index: 0,
+            routes: [{ name: "Home" }],
+          });
+        }}
+      >
     <Text style={styles.logoutButtonText}>Sair</Text>
   </TouchableOpacity>
 )}
