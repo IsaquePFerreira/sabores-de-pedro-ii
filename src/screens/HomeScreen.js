@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+
 import { getRecipes } from "../services/recipeService";
 import { AuthContext } from "../contexts/AuthContext";
 import colors from "../styles/color";
@@ -15,7 +16,7 @@ import colors from "../styles/color";
 export default function HomeScreen() {
   const [receitas, setReceitas] = useState([]);
   const navigation = useNavigation();
-  const { user, logout } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   async function carregarReceitas() {
     const data = await getRecipes();
@@ -42,31 +43,10 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      {/* HEADER */}
-      <View style={styles.header}>
-        <Text style={styles.title}>Receitas típicas e familiares</Text>
+      <Text style={styles.subtitle}>
+        Receitas típicas e familiares
+      </Text>
 
-        <View style={styles.headerButtons}>
-          {user && (
-            <TouchableOpacity
-              style={styles.logoutButton}
-              onPress={async () => {
-                await logout();
-                navigation.reset({
-                  index: 0,
-                  routes: [{ name: "Home" }],
-                });
-              }}
-            >
-              <Ionicons name="exit-outline" style={styles.logoutButtonText} />
-            </TouchableOpacity>
-          )}
-
-          
-        </View>
-      </View>
-
-      {/* LISTA */}
       <FlatList
         data={receitas}
         keyExtractor={(item) => item.id}
@@ -78,7 +58,10 @@ export default function HomeScreen() {
           >
             <View style={styles.card}>
               <Text style={styles.cardTitle}>{item.titulo}</Text>
-              <Text style={styles.cardDescription} numberOfLines={2}>
+              <Text
+                style={styles.cardDescription}
+                numberOfLines={2}
+              >
                 {item.descricao}
               </Text>
             </View>
@@ -90,12 +73,14 @@ export default function HomeScreen() {
           </Text>
         }
       />
+
+      {/* BOTÃO FLUTUANTE (+) */}
       <TouchableOpacity
-            style={styles.newButton}
-            onPress={handleNovaReceita}
-          >
-            <Ionicons name="add" style={styles.newButtonText} />
-          </TouchableOpacity>
+        style={styles.fab}
+        onPress={handleNovaReceita}
+      >
+        <Ionicons name="add" size={32} color="#fff" />
+      </TouchableOpacity>
     </View>
   );
 }
@@ -107,56 +92,14 @@ const styles = StyleSheet.create({
     padding: 16,
   },
 
-  header: {
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 8,
-  },
-
-  headerButtons: {
-    flexDirection: "row",
-    gap: 8,
-  },
-
-  title: {
-    fontSize: 22,
+  subtitle: {
+    fontSize: 32,
+    color: "#d35400",
     fontWeight: "bold",
-    color: colors.primary,
-  },
-
-  newButton: {
-    backgroundColor: colors.primary,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 8,
-    margin: "auto"
-  },
-
-  newButtonText: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 28
-  },
-
-  logoutButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 8,
-    marginLeft: 5,
-  },
-
-  logoutButtonText: {
-    color: "#d9534f",
-    fontWeight: "bold",
-    fontSize: 28,
+    marginBottom: 12,
   },
 
   card: {
-    borderBottomWidth: 1,
-    borderColor: "#eee",
     backgroundColor: colors.card,
     borderRadius: 12,
     padding: 16,
@@ -180,5 +123,18 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 20,
     color: "#777",
+  },
+
+  fab: {
+    position: "absolute",
+    bottom: 24,
+    right: 24,
+    backgroundColor: colors.primary,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 6,
   },
 });

@@ -20,7 +20,7 @@ export default function LoginScreen({ navigation }) {
       await signInWithEmailAndPassword(auth, email, senha);
 
       // 🔑 FLUXO CORRETO
-      navigation.replace("RecipeManager");
+      navigation.replace("Home");
 
     } catch (error) {
       Alert.alert("Erro", error.message);
