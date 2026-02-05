@@ -53,7 +53,7 @@ export default function HomeScreen() {
       await logout();
       navigation.reset({
         index: 0,
-        routes: [{ name: "Login" }],
+        routes: [{ name: "Home" }],
       });
     }}
   >
