@@ -10,68 +10,90 @@ export default function RecipeScreen({ route, navigation }) {
   const isAutor = user && user.uid === receita.autorId;
 
   return (
-    <ScrollView style={styles.container}>
-      {receita.imagemUrl && (
-        <Image source={{ uri: receita.imagemUrl }} style={styles.image} />
-      )}
+    <View style={styles.wrapper}>
+      <ScrollView 
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={true}
+      >
+        {receita.imagemUrl && (
+          <Image source={{ uri: receita.imagemUrl }} style={styles.image} />
+        )}
 
-      <Text style={styles.title}>{receita.titulo}</Text>
+        <Text style={styles.title}>{receita.titulo}</Text>
 
-      <Text style={styles.sectionTitle}>Descrição</Text>
-      <Text style={styles.text}>{receita.descricao}</Text>
+        <Text style={styles.sectionTitle}>Descrição</Text>
+        <Text style={styles.text}>{receita.descricao}</Text>
 
-      <Text style={styles.sectionTitle}>Ingredientes</Text>
-      {receita.ingredientes.map((item, index) => (
-        <Text key={index} style={styles.text}>
-          • {item}
-        </Text>
-      ))}
-
-      <Text style={styles.sectionTitle}>Modo de Preparo</Text>
-      <Text style={styles.text}>{receita.modoPreparo}</Text>
-
-      {receita.tempoPreparo && (
-        <>
-          <Text style={styles.sectionTitle}>Tempo de Preparo</Text>
-          <Text style={styles.text}>{receita.tempoPreparo}</Text>
-        </>
-      )}
-
-      {receita.porcoes && (
-        <>
-          <Text style={styles.sectionTitle}>Rendimento</Text>
-          <Text style={styles.text}>
-            {receita.porcoes} porções
+        <Text style={styles.sectionTitle}>Ingredientes</Text>
+        {receita.ingredientes.map((item, index) => (
+          <Text key={index} style={styles.text}>
+            • {item}
           </Text>
-        </>
-      )}
+        ))}
 
-      {receita.origemCultural && (
-        <>
-          <Text style={styles.sectionTitle}>Origem Cultural</Text>
-          <Text style={styles.text}>{receita.origemCultural}</Text>
-        </>
-      )}
+        <Text style={styles.sectionTitle}>Modo de Preparo</Text>
+        <Text style={styles.text}>{receita.modoPreparo}</Text>
 
-      {isAutor && (
+        {receita.tempoPreparo && (
+          <>
+            <Text style={styles.sectionTitle}>Tempo de Preparo</Text>
+            <Text style={styles.text}>{receita.tempoPreparo}</Text>
+          </>
+        )}
+
+        {receita.porcoes && (
+          <>
+            <Text style={styles.sectionTitle}>Rendimento</Text>
+            <Text style={styles.text}>
+              {receita.porcoes} porções
+            </Text>
+          </>
+        )}
+
+        {receita.origemCultural && (
+          <>
+            <Text style={styles.sectionTitle}>Origem Cultural</Text>
+            <Text style={styles.text}>{receita.origemCultural}</Text>
+          </>
+        )}
+      </ScrollView>
+
+      {/* Barra de botões fixa na parte inferior */}
+      <View style={styles.footerButtons}>
         <TouchableOpacity
-          style={styles.button}
-          onPress={() =>
-            navigation.navigate("RecipeManager", { receita })
-          }
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
         >
-          <Text style={styles.buttonText}>Editar Receita</Text>
+          <Text style={styles.backButtonText}>← Voltar</Text>
         </TouchableOpacity>
-      )}
-    </ScrollView>
+
+        {isAutor && (
+          <TouchableOpacity
+            style={styles.editButton}
+            onPress={() => navigation.navigate("RecipeManager", { receita })}
+          >
+            <Text style={styles.editButtonText}>✏️ Editar</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  wrapper: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+
+  container: {
+    flex: 1,
+  },
+
+  contentContainer: {
     padding: 16,
+    paddingBottom: 40,
   },
 
   image: {
@@ -102,18 +124,54 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
 
-  button: {
-    backgroundColor: colors.primary,
-    paddingVertical: 14,
-    borderRadius: 10,
+  footerButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
-    marginTop: 24,
-    marginBottom: 30,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: "#fff",
+    borderTopWidth: 1,
+    borderTopColor: "#e0e0e0",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: -2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 5,
   },
 
-  buttonText: {
-    color: "#fff",
+  backButton: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    backgroundColor: "#f5f5f5",
+    marginRight: 8,
+    alignItems: "center",
+  },
+
+  backButtonText: {
     fontSize: 16,
-    fontWeight: "bold",
+    color: colors.text,
+    fontWeight: "600",
+  },
+
+  editButton: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    backgroundColor: colors.primary,
+    marginLeft: 8,
+    alignItems: "center",
+  },
+
+  editButtonText: {
+    fontSize: 16,
+    color: "#fff",
+    fontWeight: "600",
   },
 });

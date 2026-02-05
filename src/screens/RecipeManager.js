@@ -6,7 +6,9 @@ import {
   ScrollView,
   TouchableOpacity,
   StyleSheet,
-  Alert
+  Alert,
+  KeyboardAvoidingView,
+  Platform
 } from "react-native";
 import {
   createRecipe,
@@ -100,81 +102,92 @@ export default function RecipeManager({ route, navigation }) {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>
-        {editando ? "Editar Receita" : "Cadastrar Receita"}
-      </Text>
+    <KeyboardAvoidingView 
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
+    >
+      <ScrollView 
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={true}
+        keyboardShouldPersistTaps="handled"
+      >
+        <Text style={styles.title}>
+          {editando ? "Editar Receita" : "Cadastrar Receita"}
+        </Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Título *"
-        value={titulo}
-        onChangeText={setTitulo}
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="Título *"
+          value={titulo}
+          onChangeText={setTitulo}
+        />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Descrição *"
-        value={descricao}
-        onChangeText={setDescricao}
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="Descrição *"
+          value={descricao}
+          onChangeText={setDescricao}
+        />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Ingredientes (separados por vírgula) *"
-        value={ingredientes}
-        onChangeText={setIngredientes}
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="Ingredientes (separados por vírgula) *"
+          value={ingredientes}
+          onChangeText={setIngredientes}
+        />
 
-      <TextInput
-        style={[styles.input, styles.textArea]}
-        placeholder="Modo de preparo *"
-        value={modoPreparo}
-        onChangeText={setModoPreparo}
-        multiline
-      />
+        <TextInput
+          style={[styles.input, styles.textArea]}
+          placeholder="Modo de preparo *"
+          value={modoPreparo}
+          onChangeText={setModoPreparo}
+          multiline
+        />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Tempo de preparo (ex: 60 minutos)"
-        value={tempoPreparo}
-        onChangeText={setTempoPreparo}
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="Tempo de preparo (ex: 60 minutos)"
+          value={tempoPreparo}
+          onChangeText={setTempoPreparo}
+        />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Quantidade de porções"
-        value={porcoes}
-        onChangeText={setPorcoes}
-        keyboardType="numeric"
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="Quantidade de porções"
+          value={porcoes}
+          onChangeText={setPorcoes}
+          keyboardType="numeric"
+        />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Origem cultural"
-        value={origemCultural}
-        onChangeText={setOrigemCultural}
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="Origem cultural"
+          value={origemCultural}
+          onChangeText={setOrigemCultural}
+        />
 
-      <TextInput
-        style={styles.input}
-        placeholder="URL da imagem"
-        value={imagemUrl}
-        onChangeText={setImagemUrl}
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="URL da imagem"
+          value={imagemUrl}
+          onChangeText={setImagemUrl}
+        />
 
-    <TouchableOpacity style={styles.button} onPress={handleSalvar}>
-      <Text style={styles.buttonText}>
-        {editando ? "Salvar Alterações" : "Cadastrar Receita"}
-      </Text>
-    </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleSalvar}>
+          <Text style={styles.buttonText}>
+            {editando ? "Salvar Alterações" : "Cadastrar Receita"}
+          </Text>
+        </TouchableOpacity>
 
-    {editando && (
-      <TouchableOpacity style={styles.deleteButton} onPress={handleExcluir}>
-        <Text style={styles.deleteButtonText}>Excluir Receita</Text>
-      </TouchableOpacity>
-    )}
-    </ScrollView>
+        {editando && (
+          <TouchableOpacity style={styles.deleteButton} onPress={handleExcluir}>
+            <Text style={styles.deleteButtonText}>Excluir Receita</Text>
+          </TouchableOpacity>
+        )}
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -182,7 +195,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+
+  contentContainer: {
     padding: 20,
+    paddingBottom: 40, // Espaço extra no final para garantir visibilidade total
   },
 
   title: {
@@ -223,6 +240,7 @@ const styles = StyleSheet.create({
 
   deleteButton: {
     marginTop: 14,
+    marginBottom: 20, // Espaço adicional no botão de excluir
     paddingVertical: 12,
     borderRadius: 10,
     alignItems: "center",
