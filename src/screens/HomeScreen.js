@@ -5,6 +5,7 @@ import {
   FlatList,
   TouchableOpacity,
   StyleSheet,
+  Image
 } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
@@ -48,31 +49,43 @@ export default function HomeScreen() {
       </Text>
 
       <FlatList
-        data={receitas}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate("Recipe", { receita: item })
-            }
-          >
-            <View style={styles.card}>
-              <Text style={styles.cardTitle}>{item.titulo}</Text>
-              <Text
-                style={styles.cardDescription}
-                numberOfLines={2}
-              >
-                {item.descricao}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        )}
-        ListEmptyComponent={
-          <Text style={styles.emptyText}>
-            Nenhuma receita cadastrada.
-          </Text>
+  data={receitas}
+  keyExtractor={(item) => item.id}
+  renderItem={({ item }) => {
+    const imagem =
+      item.imagemUrl && item.imagemUrl.trim() !== ""
+        ? { uri: item.imagemUrl }
+        : require("../assets/recipe-placeholder.png");
+
+    return (
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate("Recipe", { receita: item })
         }
-      />
+      >
+        <View style={styles.card}>
+          <Image source={imagem} style={styles.cardImage} />
+
+          <View style={styles.cardContent}>
+            <Text style={styles.cardTitle}>{item.titulo}</Text>
+            <Text
+              style={styles.cardDescription}
+              numberOfLines={2}
+            >
+              {item.descricao}
+            </Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  }}
+  ListEmptyComponent={
+    <Text style={styles.emptyText}>
+      Nenhuma receita cadastrada.
+    </Text>
+  }
+/>
+
 
       {/* BOTÃO FLUTUANTE (+) */}
       <TouchableOpacity
@@ -100,30 +113,34 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    backgroundColor: colors.card,
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-    elevation: 4,
-  },
+  backgroundColor: colors.card,
+  borderRadius: 14,
+  marginBottom: 16,
+  overflow: "hidden",
+  elevation: 4,
+},
 
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: colors.text,
-    marginBottom: 4,
-  },
+cardImage: {
+  width: "90%",
+  height: 160,
+},
 
-  cardDescription: {
-    fontSize: 14,
-    color: colors.muted,
-  },
+cardContent: {
+  padding: 14,
+},
 
-  emptyText: {
-    textAlign: "center",
-    marginTop: 20,
-    color: "#777",
-  },
+cardTitle: {
+  fontSize: 18,
+  fontWeight: "bold",
+  color: colors.text,
+  marginBottom: 4,
+},
+
+cardDescription: {
+  fontSize: 14,
+  color: colors.muted,
+},
+
 
   fab: {
     position: "absolute",
