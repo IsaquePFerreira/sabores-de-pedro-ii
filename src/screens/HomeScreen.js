@@ -7,6 +7,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
 import { getRecipes } from "../services/recipeService";
 import { AuthContext } from "../contexts/AuthContext";
 import colors from "../styles/color";
@@ -43,30 +44,25 @@ export default function HomeScreen() {
     <View style={styles.container}>
       {/* HEADER */}
       <View style={styles.header}>
-        <Text style={styles.title}>Cadastre uma receita</Text>
+        <Text style={styles.title}>Receitas típicas e familiares</Text>
 
         <View style={styles.headerButtons}>
-         {user && (
-      <TouchableOpacity
-        style={styles.logoutButton}
-        onPress={async () => {
-          await logout();
-          navigation.reset({
-            index: 0,
-            routes: [{ name: "Home" }],
-          });
-        }}
-      >
-    <Text style={styles.logoutButtonText}>Sair</Text>
-  </TouchableOpacity>
-)}
+          {user && (
+            <TouchableOpacity
+              style={styles.logoutButton}
+              onPress={async () => {
+                await logout();
+                navigation.reset({
+                  index: 0,
+                  routes: [{ name: "Home" }],
+                });
+              }}
+            >
+              <Ionicons name="exit-outline" style={styles.logoutButtonText} />
+            </TouchableOpacity>
+          )}
 
-          <TouchableOpacity
-            style={styles.newButton}
-            onPress={handleNovaReceita}
-          >
-            <Text style={styles.newButtonText}>Nova Receita</Text>
-          </TouchableOpacity>
+          
         </View>
       </View>
 
@@ -94,6 +90,12 @@ export default function HomeScreen() {
           </Text>
         }
       />
+      <TouchableOpacity
+            style={styles.newButton}
+            onPress={handleNovaReceita}
+          >
+            <Ionicons name="add" style={styles.newButtonText} />
+          </TouchableOpacity>
     </View>
   );
 }
@@ -130,23 +132,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 8,
+    margin: "auto"
   },
 
   newButtonText: {
     color: "#fff",
     fontWeight: "bold",
+    fontSize: 28
   },
 
   logoutButton: {
-    backgroundColor: "#d9534f",
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 8,
+    marginLeft: 5,
   },
 
   logoutButtonText: {
-    color: "#fff",
+    color: "#d9534f",
     fontWeight: "bold",
+    fontSize: 28,
   },
 
   card: {
