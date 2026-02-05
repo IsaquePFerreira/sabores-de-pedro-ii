@@ -5,7 +5,6 @@ import {
   FlatList,
   TouchableOpacity,
   StyleSheet,
-  Button
 } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { getRecipes } from "../services/recipeService";
@@ -15,7 +14,7 @@ import colors from "../styles/color";
 export default function HomeScreen() {
   const [receitas, setReceitas] = useState([]);
   const navigation = useNavigation();
-  const { user } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
 
   async function carregarReceitas() {
     const data = await getRecipes();
@@ -42,19 +41,44 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
+      {/* HEADER */}
       <View style={styles.header}>
         <Text style={styles.title}>Cadastre uma receita</Text>
-        <TouchableOpacity style={styles.newButton} onPress={handleNovaReceita}>
-          <Text style={styles.newButtonText}>Nova Receita</Text>
-        </TouchableOpacity>
+
+        <View style={styles.headerButtons}>
+         {user && (
+  <TouchableOpacity
+    style={styles.logoutButton}
+    onPress={async () => {
+      await logout();
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Login" }],
+      });
+    }}
+  >
+    <Text style={styles.logoutButtonText}>Sair</Text>
+  </TouchableOpacity>
+)}
+
+          <TouchableOpacity
+            style={styles.newButton}
+            onPress={handleNovaReceita}
+          >
+            <Text style={styles.newButtonText}>Nova Receita</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
+      {/* LISTA */}
       <FlatList
         data={receitas}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={() => navigation.navigate("Recipe", { receita: item })}
+            onPress={() =>
+              navigation.navigate("Recipe", { receita: item })
+            }
           >
             <View style={styles.card}>
               <Text style={styles.cardTitle}>{item.titulo}</Text>
@@ -65,7 +89,9 @@ export default function HomeScreen() {
           </TouchableOpacity>
         )}
         ListEmptyComponent={
-          <Text style={styles.emptyText}>Nenhuma receita cadastrada.</Text>
+          <Text style={styles.emptyText}>
+            Nenhuma receita cadastrada.
+          </Text>
         }
       />
     </View>
@@ -73,11 +99,12 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1,
+  container: {
+    flex: 1,
     backgroundColor: colors.background,
     padding: 16,
-  
-   },
+  },
+
   header: {
     paddingVertical: 12,
     paddingHorizontal: 16,
@@ -87,31 +114,17 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
 
+  headerButtons: {
+    flexDirection: "row",
+    gap: 8,
+  },
+
   title: {
     fontSize: 22,
     fontWeight: "bold",
     color: colors.primary,
   },
-  card: {
-    padding: 12,
-    borderBottomWidth: 1,
-    borderColor: "#eee",
-    backgroundColor: colors.card,
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-    elevation: 4,
-  },
-  cardTitle: { fontSize: 18, 
-    fontWeight: "bold",
-    color: colors.text,
-    marginBottom: 4,
-  },
-  emptyText: {
-    textAlign: "center",
-    marginTop: 20,
-    color: "#777"
-  },
+
   newButton: {
     backgroundColor: colors.primary,
     paddingHorizontal: 16,
@@ -123,8 +136,44 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
   },
+
+  logoutButton: {
+    backgroundColor: "#d9534f",
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 8,
+  },
+
+  logoutButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
+
+  card: {
+    borderBottomWidth: 1,
+    borderColor: "#eee",
+    backgroundColor: colors.card,
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    elevation: 4,
+  },
+
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: colors.text,
+    marginBottom: 4,
+  },
+
   cardDescription: {
     fontSize: 14,
     color: colors.muted,
-  }
+  },
+
+  emptyText: {
+    textAlign: "center",
+    marginTop: 20,
+    color: "#777",
+  },
 });
