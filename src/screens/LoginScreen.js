@@ -1,8 +1,9 @@
 import { useState, useContext } from "react";
-import { View, Text, TextInput, Button, Alert, StyleSheet } from "react-native";
+import { View, Text, TextInput, Button, Alert, StyleSheet, TouchableOpacity } from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firebase";
 import { AuthContext } from "../contexts/AuthContext";
+import colors from "../styles/color";
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
@@ -27,44 +28,98 @@ export default function LoginScreen({ navigation }) {
   }
 
   return (
-    <View style={styles.container}>
-      <Text>Email</Text>
-      <TextInput
-        value={email}
-        onChangeText={setEmail}
-        autoCapitalize="none"
-        style={styles.input}
-      />
+<View style={styles.container}>
+  <Text style={styles.title}>Bem-vindo</Text>
+  <Text style={styles.subtitle}>Entre para cadastrar suas receitas</Text>
 
-      <Text>Senha</Text>
-      <TextInput
-        value={senha}
-        onChangeText={setSenha}
-        secureTextEntry
-        style={styles.input}
-      />
+  <Text style={styles.label}>Email</Text>
+  <TextInput
+    value={email}
+    onChangeText={setEmail}
+    autoCapitalize="none"
+    style={styles.input}
+  />
 
-      <Button title="Entrar" onPress={handleLogin} />
-      <Button
-        title="Criar conta"
-        onPress={() => navigation.navigate("Register")} style={{backgroundColor: "green"}}
-      />
-    </View>
+  <Text style={styles.label}>Senha</Text>
+  <TextInput
+    value={senha}
+    onChangeText={setSenha}
+    secureTextEntry
+    style={styles.input}
+  />
+
+  <TouchableOpacity style={styles.button} onPress={handleLogin}>
+    <Text style={styles.buttonText}>Entrar</Text>
+  </TouchableOpacity>
+
+  <TouchableOpacity
+    style={styles.linkButton}
+    onPress={() => navigation.navigate("Register")}
+  >
+    <Text style={styles.linkText}>Criar conta</Text>
+  </TouchableOpacity>
+</View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1,
-    gap: 5,
-    padding: 20,
-   },
-  input: {
-    borderWidth: 1, 
-    borderColor: "#ccc",
-    borderRadius: 6,
-    padding: 10,    
-    marginBottom: 12,
-    fontSize: 16
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+    padding: 24,
+    justifyContent: "center",
   },
 
+  title: {
+    fontSize: 26,
+    fontWeight: "bold",
+    color: colors.primary,
+    marginBottom: 6,
+  },
+
+  subtitle: {
+    fontSize: 14,
+    color: colors.muted,
+    marginBottom: 24,
+  },
+
+  label: {
+    fontSize: 14,
+    color: colors.text,
+    marginBottom: 4,
+  },
+
+  input: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    fontSize: 16,
+  },
+
+  button: {
+    backgroundColor: colors.primary,
+    paddingVertical: 14,
+    borderRadius: 10,
+    alignItems: "center",
+    marginTop: 10,
+  },
+
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+
+  linkButton: {
+    marginTop: 16,
+    alignItems: "center",
+  },
+
+  linkText: {
+    color: colors.secondary,
+    fontWeight: "bold",
+  },
 });

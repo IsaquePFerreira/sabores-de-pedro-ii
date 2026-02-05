@@ -7,6 +7,7 @@ import RecipeScreen from "../screens/RecipeScreen";
 import RecipeManagerScreen from "../screens/RecipeManager";
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
+import { View, Text, Image, StyleSheet } from "react-native";
 
 const Stack = createNativeStackNavigator();
 
@@ -21,8 +22,16 @@ export default function AppNavigator() {
       <Stack.Screen
         name="Home"
         component={HomeScreen}
-        options={{ title: "Sabores de Pedro II" }}
-      />
+        options={{
+          title: "Sabores de Pedro II",
+          headerRight: () => (
+            <Image
+              source={require("../assets/Bandeira_de_Pedro_II.jpg")}
+              style={{ width: 52, height: 42, marginRight: 195, borderRadius: 8 }}
+            />
+          )
+        }}
+        />
 
       <Stack.Screen
         name="Recipe"
@@ -43,3 +52,20 @@ export default function AppNavigator() {
     </Stack.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  header: {
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  logo: {
+    width: 32,
+    height: 32,
+    marginRight: 8,
+    resizeMode: "contain"
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: "bold"
+  }
+});
