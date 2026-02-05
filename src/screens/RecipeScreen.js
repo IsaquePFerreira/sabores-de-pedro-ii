@@ -1,6 +1,7 @@
-import { View, Text, ScrollView, Image, StyleSheet, Button } from "react-native";
+import { View, Text, ScrollView, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
+import colors from "../styles/color";
 
 export default function RecipeScreen({ route, navigation }) {
   const { receita } = route.params;
@@ -53,40 +54,66 @@ export default function RecipeScreen({ route, navigation }) {
       )}
 
       {isAutor && (
-        <View style={{ marginTop: 20 }}>
-          <Button
-            title="Editar Receita"
-            onPress={() =>
-              navigation.navigate("RecipeManager", { receita })
-            }
-          />
-        </View>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() =>
+            navigation.navigate("RecipeManager", { receita })
+          }
+        >
+          <Text style={styles.buttonText}>Editar Receita</Text>
+        </TouchableOpacity>
       )}
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 16 },
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+    padding: 16,
+  },
+
   image: {
     width: "100%",
     height: 220,
-    borderRadius: 10,
-    marginBottom: 16
+    borderRadius: 12,
+    marginBottom: 16,
   },
+
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: "bold",
-    marginBottom: 12
+    color: colors.text,
+    marginBottom: 12,
   },
+
   sectionTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    marginTop: 14,
-    marginBottom: 4
+    color: colors.primary,
+    marginTop: 18,
+    marginBottom: 6,
   },
+
   text: {
     fontSize: 16,
-    lineHeight: 22
-  }
+    color: colors.text,
+    lineHeight: 24,
+  },
+
+  button: {
+    backgroundColor: colors.primary,
+    paddingVertical: 14,
+    borderRadius: 10,
+    alignItems: "center",
+    marginTop: 24,
+    marginBottom: 30,
+  },
+
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
 });

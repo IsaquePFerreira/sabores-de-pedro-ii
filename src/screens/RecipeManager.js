@@ -4,7 +4,7 @@ import {
   Text,
   TextInput,
   ScrollView,
-  Button,
+  TouchableOpacity,
   StyleSheet,
   Alert
 } from "react-native";
@@ -14,6 +14,7 @@ import {
   deleteRecipe
 } from "../services/recipeService";
 import { AuthContext } from "../contexts/AuthContext";
+import colors from "../styles/color";
 
 export default function RecipeManager({ route, navigation }) {
   const { user } = useContext(AuthContext);
@@ -162,37 +163,77 @@ export default function RecipeManager({ route, navigation }) {
         onChangeText={setImagemUrl}
       />
 
-      <Button
-        title={editando ? "Salvar Alterações" : "Cadastrar Receita"}
-        onPress={handleSalvar}
-      />
+    <TouchableOpacity style={styles.button} onPress={handleSalvar}>
+      <Text style={styles.buttonText}>
+        {editando ? "Salvar Alterações" : "Cadastrar Receita"}
+      </Text>
+    </TouchableOpacity>
 
-      {editando && (
-        <View style={{ marginTop: 12 }}>
-          <Button
-            title="Excluir Receita"
-            color="red"
-            onPress={handleExcluir}
-          />
-        </View>
-      )}
+    {editando && (
+      <TouchableOpacity style={styles.deleteButton} onPress={handleExcluir}>
+        <Text style={styles.deleteButtonText}>Excluir Receita</Text>
+      </TouchableOpacity>
+    )}
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 16 },
-  title: { fontSize: 22, fontWeight: "bold", marginBottom: 16 },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 6,
-    padding: 10,
-    marginBottom: 12,
-    fontSize: 16
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+    padding: 20,
   },
+
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: colors.primary,
+    marginBottom: 20,
+  },
+
+  input: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 14,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    fontSize: 16,
+  },
+
   textArea: {
-    height: 100,
-    textAlignVertical: "top"
-  }
+    height: 120,
+    textAlignVertical: "top",
+  },
+
+  button: {
+    backgroundColor: colors.primary,
+    paddingVertical: 14,
+    borderRadius: 10,
+    alignItems: "center",
+    marginTop: 10,
+  },
+
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+
+  deleteButton: {
+    marginTop: 14,
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#E74C3C",
+  },
+
+  deleteButtonText: {
+    color: "#E74C3C",
+    fontSize: 15,
+    fontWeight: "bold",
+  },
 });
+

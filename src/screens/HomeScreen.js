@@ -10,6 +10,7 @@ import {
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { getRecipes } from "../services/recipeService";
 import { AuthContext } from "../contexts/AuthContext";
+import colors from "../styles/color";
 
 export default function HomeScreen() {
   const [receitas, setReceitas] = useState([]);
@@ -42,8 +43,10 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Sabores de Pedro II</Text>
-        <Button title="Nova Receita" onPress={handleNovaReceita} />
+        <Text style={styles.title}>Cadastre uma receita</Text>
+        <TouchableOpacity style={styles.newButton} onPress={handleNovaReceita}>
+          <Text style={styles.newButtonText}>Nova Receita</Text>
+        </TouchableOpacity>
       </View>
 
       <FlatList
@@ -55,7 +58,9 @@ export default function HomeScreen() {
           >
             <View style={styles.card}>
               <Text style={styles.cardTitle}>{item.titulo}</Text>
-              <Text numberOfLines={2}>{item.descricao}</Text>
+              <Text style={styles.cardDescription} numberOfLines={2}>
+                {item.descricao}
+              </Text>
             </View>
           </TouchableOpacity>
         )}
@@ -68,23 +73,58 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  header: {
+  container: { flex: 1,
+    backgroundColor: colors.background,
     padding: 16,
+  
+   },
+  header: {
+    paddingVertical: 12,
+    paddingHorizontal: 16,
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
+    marginBottom: 8,
   },
-  title: { fontSize: 22, fontWeight: "bold" },
+
+  title: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: colors.primary,
+  },
   card: {
     padding: 12,
     borderBottomWidth: 1,
-    borderColor: "#eee"
+    borderColor: "#eee",
+    backgroundColor: colors.card,
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    elevation: 4,
   },
-  cardTitle: { fontSize: 18, fontWeight: "bold" },
+  cardTitle: { fontSize: 18, 
+    fontWeight: "bold",
+    color: colors.text,
+    marginBottom: 4,
+  },
   emptyText: {
     textAlign: "center",
     marginTop: 20,
     color: "#777"
+  },
+  newButton: {
+    backgroundColor: colors.primary,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 8,
+  },
+
+  newButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
+  cardDescription: {
+    fontSize: 14,
+    color: colors.muted,
   }
 });
