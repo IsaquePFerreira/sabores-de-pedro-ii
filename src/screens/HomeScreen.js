@@ -50,7 +50,7 @@ export default function HomeScreen() {
   <TouchableOpacity
     style={styles.logoutButton}
     onPress={async () => {
-      await logout();
+      await logout;
       navigation.reset({
         index: 0,
         routes: [{ name: "Login" }],
