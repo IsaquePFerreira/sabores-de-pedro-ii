@@ -5,27 +5,33 @@ import { auth } from "../config/firebase";
 import { AuthContext } from "../contexts/AuthContext";
 import colors from "../styles/color";
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen({ navigation, route  }) {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const { user } = useContext(AuthContext);
 
   async function handleLogin() {
-    if (!email || !senha) {
-      Alert.alert("Erro", "Preencha email e senha");
-      return;
-    }
-
-    try {
-      await signInWithEmailAndPassword(auth, email, senha);
-
-      // 🔑 FLUXO CORRETO
-      navigation.replace("Home");
-
-    } catch (error) {
-      Alert.alert("Erro", error.message);
-    }
+  if (!email || !senha) {
+    Alert.alert("Erro", "Preencha email e senha");
+    return;
   }
+
+  try {
+    await signInWithEmailAndPassword(auth, email, senha);
+
+    // Verifica se há um destino específico para redirecionar
+    const destino = route.params?.voltarPara;
+    
+    if (destino) {
+      navigation.replace(destino);
+    } else {
+      navigation.replace("Home");
+    }
+
+  } catch (error) {
+    Alert.alert("Erro", error.message);
+  }
+}
 
   return (
 <View style={styles.container}>
