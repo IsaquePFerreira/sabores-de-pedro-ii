@@ -25,7 +25,10 @@ export default function LoginScreen({ navigation, route  }) {
     if (destino) {
       navigation.replace(destino);
     } else {
-      navigation.replace("Home");
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Home" }],
+      });
     }
 
   } catch (error) {
