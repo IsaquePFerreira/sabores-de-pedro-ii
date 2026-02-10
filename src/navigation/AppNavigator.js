@@ -1,110 +1,72 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { View, Text, Image, TouchableOpacity } from "react-native";
 import { useContext } from "react";
-import { Ionicons } from "@expo/vector-icons";
 
 import { AuthContext } from "../contexts/AuthContext";
 
 import HomeScreen from "../screens/HomeScreen";
-import RecipeScreen from "../screens/RecipeScreen";
-import RecipeManagerScreen from "../screens/RecipeManager";
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
+import RecipeScreen from "../screens/RecipeScreen";
+import RecipeManager from "../screens/RecipeManager";
+
+import AppHeader from "../components/AppHeader";
+import colors from "../styles/color";
 
 const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
-  const { user, loading, logout } = useContext(AuthContext);
+  const { user, loading } = useContext(AuthContext);
 
   if (loading) return null;
 
   return (
-    <Stack.Navigator initialRouteName="Home">
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: colors.background },
+        headerTintColor: "#000",
+        headerTitleAlign: "center",
+      }}
+    >
       <Stack.Screen
         name="Home"
         component={HomeScreen}
-        options={({ navigation }) => ({
-          headerTitleAlign: "center",
-
-          headerTitle: () => (
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 8,
-              }}
-            >
-              <Image
-                source={require("../../assets/saborp2.png")}
-                style={{
-                  width: 116,
-                  height: 116,
-                  borderRadius: 4,
-                }}
-              />
-              <Text style={{ fontSize: 18, fontWeight: "bold", paddingRight: 48 }}>
-                Sabores de Pedro II
-              </Text>
-            </View>
-          ),
-
-          headerRight: () => (
-            <View style={{ marginRight: 8 }}>
-              {user ? (
-                <TouchableOpacity
-                  onPress={async () => {
-                    await logout();
-                    navigation.reset({
-                      index: 0,
-                      routes: [{ name: "Home" }],
-                    });
-                  }}
-                >
-                  <Ionicons
-                    name="exit-outline"
-                    size={32}
-                    color="#d9534f"
-                  />
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity
-                  onPress={() => navigation.navigate("Login")}
-                >
-                  <Ionicons
-                    name="person-circle"
-                    size={32}
-                    color="#333"
-                  />
-                </TouchableOpacity>
-              )}
-            </View>
-          ),
-        })}
+        options={{
+          headerTitle: () => <AppHeader />,
+          headerBackVisible: false,
+          gestureEnabled: false,   
+        }}
       />
 
       <Stack.Screen
         name="Recipe"
         component={RecipeScreen}
-        options={{ title: "Receita" }}
+        options={{ title: "Detalhes da Receita" }}
       />
 
       <Stack.Screen
         name="RecipeManager"
-        component={RecipeManagerScreen}
-        options={{ title: "Cadastrar Receita" }}
+        component={RecipeManager}
+        options={({ route }) => ({
+          title: route?.params?.receita
+            ? "Editar Receita"
+            : "Nova Receita",
+        })}
       />
 
-      <Stack.Screen
-        name="Login"
-        component={LoginScreen}
-        options={{ title: "Entrar" }}
-      />
-
-      <Stack.Screen
-        name="Register"
-        component={RegisterScreen}
-        options={{ title: "Criar Conta" }}
-      />
+      {!user && (
+        <>
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{ title: "Entrar" }}
+          />
+          <Stack.Screen
+            name="Register"
+            component={RegisterScreen}
+            options={{ title: "Criar Conta" }}
+          />
+        </>
+      )}
     </Stack.Navigator>
   );
 }
