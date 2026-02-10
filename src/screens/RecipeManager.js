@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useMemo } from "react";
 import {
   View,
   Text,
@@ -10,40 +10,57 @@ import {
   KeyboardAvoidingView,
   Platform
 } from "react-native";
+
 import {
   createRecipe,
   updateRecipe,
   deleteRecipe
 } from "../services/recipeService";
+
 import { AuthContext } from "../contexts/AuthContext";
 import colors from "../styles/color";
 
 export default function RecipeManager({ route, navigation }) {
   const { user } = useContext(AuthContext);
-  const receita = route?.params?.receita;
-  const editando = !!receita;
 
-  const [titulo, setTitulo] = useState("");
-  const [descricao, setDescricao] = useState("");
-  const [ingredientes, setIngredientes] = useState("");
-  const [modoPreparo, setModoPreparo] = useState("");
-  const [tempoPreparo, setTempoPreparo] = useState("");
-  const [porcoes, setPorcoes] = useState("");
-  const [origemCultural, setOrigemCultural] = useState("");
-  const [imagemUrl, setImagemUrl] = useState("");
+  const receita = route?.params?.receita || null;
+  const editando = useMemo(() => !!receita, [receita]);
 
+  const [form, setForm] = useState({
+    titulo: "",
+    descricao: "",
+    ingredientes: "",
+    modoPreparo: "",
+    tempoPreparo: "",
+    porcoes: "",
+    origemCultural: "",
+    imagemUrl: ""
+  });
+
+  /**
+   * Atualiza o formulário quando a receita muda
+   * (corrige bug de dependência)
+   */
   useEffect(() => {
-    if (receita) {
-      setTitulo(receita.titulo);
-      setDescricao(receita.descricao);
-      setIngredientes(receita.ingredientes.join(", "));
-      setModoPreparo(receita.modoPreparo);
-      setTempoPreparo(receita.tempoPreparo || "");
-      setPorcoes(receita.porcoes || "");
-      setOrigemCultural(receita.origemCultural || "");
-      setImagemUrl(receita.imagemUrl || "");
-    }
-  }, []);
+    if (!receita) return;
+
+    setForm({
+      titulo: receita.titulo ?? "",
+      descricao: receita.descricao ?? "",
+      ingredientes: Array.isArray(receita.ingredientes)
+        ? receita.ingredientes.join(", ")
+        : "",
+      modoPreparo: receita.modoPreparo ?? "",
+      tempoPreparo: receita.tempoPreparo ?? "",
+      porcoes: receita.porcoes ?? "",
+      origemCultural: receita.origemCultural ?? "",
+      imagemUrl: receita.imagemUrl ?? ""
+    });
+  }, [receita]);
+
+  function updateField(field, value) {
+    setForm(prev => ({ ...prev, [field]: value }));
+  }
 
   async function handleSalvar() {
     if (!user) {
@@ -51,30 +68,13 @@ export default function RecipeManager({ route, navigation }) {
       return;
     }
 
-    if (!titulo || !descricao || !ingredientes || !modoPreparo) {
-      Alert.alert("Erro", "Preencha os campos obrigatórios");
-      return;
-    }
-
-    const dados = {
-      titulo,
-      descricao,
-      ingredientes: ingredientes.split(",").map(i => i.trim()),
-      modoPreparo,
-      tempoPreparo,
-      porcoes,
-      origemCultural,
-      imagemUrl: imagemUrl || null,
-      categoriaId: "geral"
-    };
-
     try {
       if (editando) {
-        await updateRecipe(receita.id, dados);
-        Alert.alert("Sucesso", "Receita atualizada");
+        await updateRecipe(receita.id, form);
+        Alert.alert("Sucesso", "Receita atualizada com sucesso");
       } else {
-        await createRecipe(dados, user.uid);
-        Alert.alert("Sucesso", "Receita cadastrada");
+        await createRecipe(form, user.uid);
+        Alert.alert("Sucesso", "Receita cadastrada com sucesso");
       }
 
       navigation.goBack();
@@ -84,6 +84,8 @@ export default function RecipeManager({ route, navigation }) {
   }
 
   function handleExcluir() {
+    if (!receita?.id) return;
+
     Alert.alert(
       "Excluir receita",
       "Deseja realmente excluir esta receita?",
@@ -93,8 +95,12 @@ export default function RecipeManager({ route, navigation }) {
           text: "Excluir",
           style: "destructive",
           onPress: async () => {
-            await deleteRecipe(receita.id);
-            navigation.goBack();
+            try {
+              await deleteRecipe(receita.id);
+              navigation.goBack();
+            } catch (error) {
+              Alert.alert("Erro", error.message);
+            }
           }
         }
       ]
@@ -102,15 +108,14 @@ export default function RecipeManager({ route, navigation }) {
   }
 
   return (
-    <KeyboardAvoidingView 
+    <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
     >
-      <ScrollView 
+      <ScrollView
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
-        showsVerticalScrollIndicator={true}
         keyboardShouldPersistTaps="handled"
       >
         <Text style={styles.title}>
@@ -120,59 +125,59 @@ export default function RecipeManager({ route, navigation }) {
         <TextInput
           style={styles.input}
           placeholder="Título *"
-          value={titulo}
-          onChangeText={setTitulo}
+          value={form.titulo}
+          onChangeText={v => updateField("titulo", v)}
         />
 
         <TextInput
           style={styles.input}
           placeholder="Descrição *"
-          value={descricao}
-          onChangeText={setDescricao}
+          value={form.descricao}
+          onChangeText={v => updateField("descricao", v)}
         />
 
         <TextInput
           style={styles.input}
           placeholder="Ingredientes (separados por vírgula) *"
-          value={ingredientes}
-          onChangeText={setIngredientes}
+          value={form.ingredientes}
+          onChangeText={v => updateField("ingredientes", v)}
         />
 
         <TextInput
           style={[styles.input, styles.textArea]}
           placeholder="Modo de preparo *"
-          value={modoPreparo}
-          onChangeText={setModoPreparo}
+          value={form.modoPreparo}
+          onChangeText={v => updateField("modoPreparo", v)}
           multiline
         />
 
         <TextInput
           style={styles.input}
-          placeholder="Tempo de preparo (ex: 60 minutos)"
-          value={tempoPreparo}
-          onChangeText={setTempoPreparo}
+          placeholder="Tempo de preparo"
+          value={form.tempoPreparo}
+          onChangeText={v => updateField("tempoPreparo", v)}
         />
 
         <TextInput
           style={styles.input}
           placeholder="Quantidade de porções"
-          value={porcoes}
-          onChangeText={setPorcoes}
+          value={form.porcoes}
+          onChangeText={v => updateField("porcoes", v)}
           keyboardType="numeric"
         />
 
         <TextInput
           style={styles.input}
           placeholder="Origem cultural"
-          value={origemCultural}
-          onChangeText={setOrigemCultural}
+          value={form.origemCultural}
+          onChangeText={v => updateField("origemCultural", v)}
         />
 
         <TextInput
           style={styles.input}
           placeholder="URL da imagem"
-          value={imagemUrl}
-          onChangeText={setImagemUrl}
+          value={form.imagemUrl}
+          onChangeText={v => updateField("imagemUrl", v)}
         />
 
         <TouchableOpacity style={styles.button} onPress={handleSalvar}>
@@ -182,7 +187,10 @@ export default function RecipeManager({ route, navigation }) {
         </TouchableOpacity>
 
         {editando && (
-          <TouchableOpacity style={styles.deleteButton} onPress={handleExcluir}>
+          <TouchableOpacity
+            style={styles.deleteButton}
+            onPress={handleExcluir}
+          >
             <Text style={styles.deleteButtonText}>Excluir Receita</Text>
           </TouchableOpacity>
         )}
@@ -199,7 +207,7 @@ const styles = StyleSheet.create({
 
   contentContainer: {
     padding: 20,
-    paddingBottom: 40, // Espaço extra no final para garantir visibilidade total
+    paddingBottom: 40,
   },
 
   title: {
@@ -240,7 +248,6 @@ const styles = StyleSheet.create({
 
   deleteButton: {
     marginTop: 14,
-    marginBottom: 20, // Espaço adicional no botão de excluir
     paddingVertical: 12,
     borderRadius: 10,
     alignItems: "center",
@@ -254,4 +261,3 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
-
