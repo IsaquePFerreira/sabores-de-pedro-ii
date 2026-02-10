@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Text, TextInput, Alert, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, Alert, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firebase";
 import colors from "../styles/color";
@@ -27,10 +27,17 @@ export default function RegisterScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-  <Text style={styles.title}>Criar conta</Text>
-  <Text style={styles.subtitle}>
-    Cadastre-se para adicionar novas receitas
-  </Text>
+  <Image 
+    source={require("../../assets/saborp2.png")} 
+    style={styles.backgroundLogo}
+    resizeMode="contain"
+  />
+  
+  <View style={styles.content}>
+    <Text style={styles.title}>Criar conta</Text>
+    <Text style={styles.subtitle}>
+      Cadastre-se para adicionar novas receitas
+    </Text>
 
   <Text style={styles.label}>Email</Text>
   <TextInput
@@ -58,6 +65,7 @@ export default function RegisterScreen({ navigation }) {
   >
     <Text style={styles.linkText}>Já tenho conta</Text>
   </TouchableOpacity>
+  </View>
 </View>
   );
 }
@@ -66,6 +74,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+
+  backgroundLogo: {
+    position: "absolute",
+    width: 300,
+    height: 300,
+    top: -40, // 40
+    alignSelf: "center",
+    // opacity: 0.15, // deixa a logo suave no fundo (ajuste entre 0.1 e 0.3)
+  },
+
+  content: {
+    flex: 1,
     padding: 24,
     justifyContent: "center",
   },
