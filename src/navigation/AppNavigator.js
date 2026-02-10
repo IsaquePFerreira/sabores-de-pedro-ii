@@ -35,14 +35,14 @@ export default function AppNavigator() {
               }}
             >
               <Image
-                source={require("../assets/Bandeira_de_Pedro_II.jpg")}
+                source={require("../../assets/saborp2.png")}
                 style={{
-                  width: 32,
-                  height: 32,
+                  width: 116,
+                  height: 116,
                   borderRadius: 4,
                 }}
               />
-              <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+              <Text style={{ fontSize: 18, fontWeight: "bold", paddingRight: 48 }}>
                 Sabores de Pedro II
               </Text>
             </View>
