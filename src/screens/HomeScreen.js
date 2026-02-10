@@ -133,7 +133,7 @@ export default function HomeScreen() {
     const imagem =
       item.imagemUrl?.trim()
         ? { uri: item.imagemUrl }
-        : require("../assets/recipe-placeholder.png");
+        : require("../../assets/recipe-placeholder.png");
 
     const isAutor = user && user.uid === item.autorId;
 
