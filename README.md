@@ -116,7 +116,7 @@ Passos
 4. Execute o projeto:
 
    ```bash
-   expo start
+   npx expo start
    ```
 
 Contexto Acadêmico
